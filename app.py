@@ -36,19 +36,6 @@ def get_quartiles(df, val):
     return q_values
 
 q_values = get_quartiles(pred_df["predicted_probability"][pred_df["SCHLHRS"] == 4], [1, .75, .5, .25])
-#Initalize botton values
-
-if "race_val" not in st.session_state:
-    st.session_state["race_val"] = "Hispanic"
-
-if 'income_val' not in st.session_state:
-    st.session_state["income_val"] = "50-75k"
-
-if 'internet_val' not in st.session_state:
-    st.session_state["internet_val"] = "Sometimes"
-
-if 'segment_val' not in st.session_state:
-    st.session_state["segment_val"] = 0.5079 * 100 # Default based on segment: Hispanic, 50-75k, Sometimes
 
 if 'quart_val' not in st.session_state:
     st.session_state["quart_val"] = float(q_values[0]) * 100
