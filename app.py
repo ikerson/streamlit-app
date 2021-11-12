@@ -37,6 +37,9 @@ def get_quartiles(df, val):
 
 q_values = get_quartiles(pred_df["predicted_probability"][pred_df["SCHLHRS"] == 4], [1, .75, .5, .25])
 
+if 'segment_val' not in st.session_state:
+    st.session_state["segment_val"] = 0.5079 * 100 # Default based on segment: Hispanic, 50-75k, Sometimes
+
 if 'quart_val' not in st.session_state:
     st.session_state["quart_val"] = float(q_values[0]) * 100
 
