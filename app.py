@@ -37,23 +37,21 @@ def get_quartiles(df, val):
 
 q_values = get_quartiles(pred_df["predicted_probability"][pred_df["SCHLHRS"] == 4], [1, .75, .5, .25])
 
-if 'segment_val' not in st.session_state:
-    st.session_state["segment_val"] = 0.5079 * 100 # Default based on segment: Hispanic, 50-75k, Sometimes
-
 if 'quart_val' not in st.session_state:
     st.session_state["quart_val"] = float(q_values[0]) * 100
+
+if 'segment_val' not in st.session_state:
+    st.session_state["segment_val"] = 0.5079 * 100 # Default based on segment: Hispanic, 50-75k, Sometimes
 
 def seg_val_tracker(race_val, income_val, internet_val, target_hours_val):
     new_seg_val = pred_df[(pred_df["RACE_ETHNICITY"] == race_val) \
     & (pred_df["INCOME"] == income_slider_vals.index(income_val) + 1)\
-    & (pred_df["INTRNTAVAIL"] == internet_dropdown_vals.index(internet_val) + 1)\
+    & (pred_df["INTRNTAVAIL"] == internet_dropdown_vals[::-1].index(internet_val) + 1)\
     & (pred_df["SCHLHRS"] == target_hours_val)].iloc[:,[5]].values.astype(float)
-    st.session_state.segment_val = float(new_seg_val) * 100
-    return st.session_state.segment_val
+    st.session_state["segment_val"] = float(new_seg_val) * 100
 
 def quartile_val_tracker(idx):
     st.session_state["quart_val"] = float(q_values[idx]) * 100
-    return st.session_state["quart_val"]
 
 #Start Page content
 
@@ -134,14 +132,9 @@ with st.form("segment_form"):
                     help="select a value")
     income_val = st.select_slider("Income", 
                     options = income_slider_vals, 
-                    help = "select a value",
-                    value= "50-75k")
+                    help = "select a value")
     internet_val = st.select_slider("Internet availability",
                     options = internet_dropdown_vals, 
-                    help = "select a value", 
-                    value="Sometimes")
+                    help = "select a value")
     submitted = st.form_submit_button("Submit", on_click=seg_val_tracker, #Below passes segment value from pandas df to callback function
                                     args=(race_val, income_val, internet_val, target_hours_val, ))
-
-
-
