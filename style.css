@@ -16,3 +16,9 @@
     text-align: center;
     bottom: 5px;
   }
+
+  mark {
+    font-weight: bold;
+    background-color: transparent;
+    color: #000000;
+  }
